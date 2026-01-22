@@ -7,19 +7,39 @@
 </head>
 <body>
 
-  <h1>Posts CRUD App</h1>
+  <header class="header">
+    <div class="container nav">
+      <h1 class="logo">Posts CRUD</h1>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </header>
 
-  <form id="postForm" class="card form-card">
-    <input type="text" id="title" placeholder="Post Title" required>
+  <main class="main">
+    <div class="container">
 
-    <textarea id="body" placeholder="Post Body" required></textarea>
+      <form id="postForm" class="card form-card">
+        <h2>Create Post</h2>
+        <input type="text" id="title" placeholder="Post Title" required>
+        <textarea id="body" placeholder="Post Body" required></textarea>
+        <input type="file" id="image" accept="image/*">
+        <button type="submit">Add Post</button>
+      </form>
 
-    <input type="file" id="image" accept="image/*">
+      <div id="posts" class="posts-container"></div>
 
-    <button type="submit">Add Post</button>
-  </form>
+      <div class="load-more-wrapper">
+        <button id="loadMore">Load More</button>
+      </div>
 
-  <div id="posts" class="posts-container"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Posts CRUD App</p>
+  </footer>
 
   <script src="index.js"></script>
 </body>

@@ -6,6 +6,11 @@ const form = document.getElementById("postForm");
 const titleInput = document.getElementById("title");
 const bodyInput = document.getElementById("body");
 const imageInput = document.getElementById("image");
+const loadMoreBtn = document.getElementById("loadMore");
+
+let start = 0;
+const limit = 10;
+
 
 function getLocalPosts() {
   return JSON.parse(localStorage.getItem("posts")) || [];
@@ -22,13 +27,26 @@ async function getPosts() {
     showPost(post, post.imageURL || null);
   });
 
-  const res = await fetch(API);
+  await loadMorePosts();
+}
+async function loadMorePosts() {
+  const res = await fetch(`${API}?_start=${start}&_limit=${limit}`);
   const posts = await res.json();
 
-  posts.slice(0, 10).forEach(post => {
+  posts.forEach(post => {
     showPost(post, null);
   });
+
+  start += limit;
+
+  if (posts.length < limit) {
+    loadMoreBtn.style.display = "none";
+  }
 }
+
+loadMoreBtn.onclick = () => {
+  loadMorePosts();
+};
 
 function showPost(post, imageURL = null) {
   const div = document.createElement("div");
@@ -93,7 +111,7 @@ form.addEventListener("submit", async (e) => {
   const res = await fetch(API, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, body, userId: 1 }),
+    body: JSON.stringify({ title, body, userId: 1 })
   });
 
   const newPost = await res.json();
@@ -113,7 +131,7 @@ async function updatePost(id, title, body) {
   await fetch(API + "/" + id, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, title, body, userId: 1 }),
+    body: JSON.stringify({ id, title, body, userId: 1 })
   });
 
   const posts = getLocalPosts();
@@ -125,7 +143,6 @@ async function updatePost(id, title, body) {
     saveLocalPosts(posts);
   }
 }
-
 async function deletePost(id) {
   await fetch(API + "/" + id, { method: "DELETE" });
 
@@ -135,4 +152,5 @@ async function deletePost(id) {
 
   document.querySelector(`[data-id="${id}"]`)?.remove();
 }
+
 getPosts();
